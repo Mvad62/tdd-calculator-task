@@ -1,4 +1,4 @@
-package ru.liga.calculator.domain;
+package ru.liga.calculator;
 
 public interface Calculator {
 
