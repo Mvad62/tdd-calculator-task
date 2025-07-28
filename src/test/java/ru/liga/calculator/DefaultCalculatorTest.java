@@ -1,37 +1,47 @@
 package ru.liga.calculator;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class DefaultCalculatorTest {
 
-    @Test
-    public void testEmptyString() {
-        StudyCalculator calculator = new StudyCalculator();
-        assertEquals(0, calculator.sum(""));
-    }
+        @Test
+        public void testNullString() {
+            StudyCalculator calculator = new StudyCalculator();
+            assertThatThrownBy(() -> calculator.sum(null))
+                    .isInstanceOf(RuntimeException.class);
+        }
 
-    @Test
-    public void testSingleNumber() {
-        StudyCalculator calculator = new StudyCalculator();
-        assertEquals(5, calculator.sum("5"));
-    }
+        @Test
+        public void testEmptyString() {
+            StudyCalculator calculator = new StudyCalculator();
+            assertThat(calculator.sum("")).isZero();
+        }
 
-    @Test
-    public void testTwoNumbers() {
-        StudyCalculator calculator = new StudyCalculator();
-        assertEquals(8, calculator.sum("3 5"));
-    }
+        @Test
+        public void testSingleNumber() {
+            StudyCalculator calculator = new StudyCalculator();
+            assertThat(calculator.sum("5")).isEqualTo(5);
+        }
 
-    @Test
-    public void testMoreThanTwoNumbers() {
-        StudyCalculator calculator = new StudyCalculator();
-        assertThrows(RuntimeException.class, () -> calculator.sum("1 2 3"));
-    }
+        @Test
+        public void testTwoNumbers() {
+            StudyCalculator calculator = new StudyCalculator();
+            assertThat(calculator.sum("3 5")).isEqualTo(8);
+        }
+
+        @Test
+        public void testMoreThanTwoNumbers() {
+            StudyCalculator calculator = new StudyCalculator();
+            assertThatThrownBy(() -> calculator.sum("1 2 3"))
+                    .isInstanceOf(RuntimeException.class);
+        }
 
     @Test
     public void testNonNumericCharacters() {
         StudyCalculator calculator = new StudyCalculator();
-        assertThrows(RuntimeException.class, () -> calculator.sum("1 a"));
+        //assertThrows(RuntimeException.class, () -> calculator.sum("1 a"));
+        assertThatThrownBy(() -> calculator.sum("1 a"))
+                .isInstanceOf(RuntimeException.class);
     }
 }
