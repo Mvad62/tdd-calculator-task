@@ -1,29 +1,52 @@
 package ru.liga.calculator;
 
+import com.google.common.base.Splitter;
+
 public class StudyCalculator implements Calculator {
     private static final Integer ARGS_LENGTH = 2;
-    private static final String SEPARATOR = "\\s+";
 
-    public int sum(String numbersString) {
-        if (numbersString.trim().isEmpty()) {
-            return 0;
-        }
-
-        String[] numberParts = numbersString.split(SEPARATOR);
-
-        if (numberParts.length > ARGS_LENGTH) {
-            throw new RuntimeException("Больше двух чисел в строке аргумента");
-        }
-
-        int sum = 0;
-        for (String number : numberParts) {
-            try {
-                sum += Integer.parseInt(number);
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Нечисловой символ в строке аргумента " + number);
+    @Override
+    public int sum(String numbers, String delimiter) {
+        Iterable<String> tokens;
+        int count = 0;
+        try {
+            if (numbers.isEmpty()) {
+                return 0;
             }
+            if (hasDelimiterMarker(numbers)) {
+                delimiter = defineDelimiter(numbers, delimiter);
+                numbers = numbers.substring(3);
+            }
+            tokens = Splitter.on(delimiter).split(numbers);
+            int result = 0;
+            for (String token : tokens) {
+                if (!hasDelimiterMarker(token.trim()) && numberIsPositive(token.trim())) {
+                    count++;
+                    if (count > ARGS_LENGTH) {
+                        throw new RuntimeException("More than 2 numbers");
+                    }
+                    result += Integer.parseInt(token.trim());
+                }
+            }
+            return result;
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Calculation Exception! Details:", e);
         }
-
-        return sum;
     }
+
+    private String defineDelimiter(String numbers, String delimiter) {
+        if (hasDelimiterMarker(numbers)) {
+            delimiter = numbers.substring(2, 3);
+        }
+        return delimiter;
+    }
+
+    private boolean hasDelimiterMarker(String token) {
+        return token.startsWith("//");
+    }
+
+    private boolean numberIsPositive(String token) {
+        return !(token.trim().charAt(0) == '-');
+    }
+
 }
