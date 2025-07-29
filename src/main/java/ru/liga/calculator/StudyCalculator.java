@@ -5,7 +5,7 @@ public class StudyCalculator implements Calculator {
     private static final String SEPARATOR = "\\s+";
 
     public int sum(String numbersString) {
-        if (numbersString == null || numbersString.trim().isEmpty()) {
+        if (numbersString.trim().isEmpty()) {
             return 0;
         }
 
